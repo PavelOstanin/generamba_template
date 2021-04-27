@@ -1,0 +1,39 @@
+//
+//  {{ module_info.file_name }}
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright © {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+
+struct {{ module_info.name }}Factory {
+
+    private static let _shared = {{ module_info.name }}Factory()
+
+    static var shared: {{ module_info.name }}Factory {
+        return _shared
+    }
+
+
+    func createModule() -> UIViewController {
+        let storyboard = UIStoryboard(name: storyboardId, bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: initialControllerID) as? {{ module_info.name }}ViewController
+        let presenter = {{ module_info.name }}Presenter()
+        presenter.view = controller
+        
+        let interactor = {{ module_info.name }}Interactor()
+        let router         = {{ module_info.name }}Router()
+        presenter.router = router
+        router.viewController = controller
+        presenter.interactor = interactor
+        interactor.output = presenter
+        controller?.output = presenter
+        return controller!
+    }
+    
+    // MARK:
+    let storyboardId = "{{ module_info.name }}"
+    let initialControllerID = "{{ module_info.name }}ViewController"
+}
